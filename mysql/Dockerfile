@@ -1,4 +1,4 @@
-FROM mysql:8.0
+FROM mysql:8.0-debian
 
 RUN apt-get update && apt-get install -y --no-install-recommends perl && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
