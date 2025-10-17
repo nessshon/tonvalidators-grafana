@@ -1,16 +1,16 @@
 services:
 
-  mariadb:
-    build: ./mariadb
-    container_name: tonvalidators-mariadb
+  mysql:
+    build: ./mysql
+    container_name: tonvalidators-mysql
     restart: unless-stopped
     env_file:
       - .env
     ports:
       - "3306:3306"
     volumes:
-      - ./mariadb/data:/var/lib/mysql
-      - ./mariadb/conf.d:/etc/mysql/conf.d
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -19,12 +19,12 @@ services:
     ports:
       - "8080:80"
     environment:
-      PMA_HOST: mariadb
+      PMA_HOST: mysql
       UPLOAD_LIMIT: 4096M
       MEMORY_LIMIT: 2048M
       MAX_EXECUTION_TIME: 0
     depends_on:
-      - mariadb
+      - mysql
 
   grafana:
     image: grafana/grafana:latest

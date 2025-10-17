@@ -3,15 +3,15 @@ apiVersion: 1
 datasources:
   - name: MySQL
     uid: mysql_ds
-    type: mariadb
+    type: mysql
     access: proxy
     isDefault: false
-    url: ${MARIADB_HOST}:${MARIADB_PORT}
-    user: ${MARIADB_USER}
+    url: ${MYSQL_HOST}:${MYSQL_PORT}
+    user: ${MYSQL_USER}
     secureJsonData:
-      password: ${MARIADB_PASSWORD}
+      password: ${MYSQL_PASSWORD}
     jsonData:
-      database: ${MARIADB_DATABASE}
+      database: ${MYSQL_DATABASE}
       tlsAuth: false
       sslmode: disable
       timeInterval: 1m
