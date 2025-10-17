@@ -1,0 +1,51 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: tonvalidators-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: tonvalidators-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      UPLOAD_LIMIT: 4096M
+      MEMORY_LIMIT: 2048M
+      MAX_EXECUTION_TIME: 0
+    depends_on:
+      - mysql
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: tonvalidators-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/etc/grafana/dashboards
+
+#  nginx:
+#    image: jonasal/nginx-certbot:5.0.0
+#    container_name: tonvalidators-nginx
+#    restart: unless-stopped
+#    env_file:
+#      - ./.env
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./nginx/user_conf.d:/etc/nginx/user_conf.d
+#      - ./certbot/letsencrypt:/etc/letsencrypt
