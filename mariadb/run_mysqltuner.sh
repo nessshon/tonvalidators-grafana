@@ -1,9 +1,20 @@
 #!/bin/bash
+set -e
+
 echo "Running mysqltuner for initial diagnostic..."
 
-until mysqladmin ping -h localhost --silent; do
-  sleep 3
-done
+ADMIN_BIN="$(command -v mariadb-admin || true)"
+[ -z "$ADMIN_BIN" ] && ADMIN_BIN="$(command -v mysqladmin || true)"
+
+if [ -n "$ADMIN_BIN" ]; then
+  until "$ADMIN_BIN" ping -h 127.0.0.1 --silent; do
+    sleep 2
+  done
+else
+  until [ -S /var/run/mysqld/mysqld.sock ]; do
+    sleep 2
+  done
+fi
 
 mysqltuner --socket /var/run/mysqld/mysqld.sock \
   --user="${MARIADB_USER:-root}" \
