@@ -1,16 +1,18 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 echo "Running mysqltuner for initial diagnostic..."
 
 SOCKET="/var/run/mysqld/mysqld.sock"
-until mysqladmin --socket="$SOCKET" ping --silent; do
-  sleep 2
+REPORT="/var/lib/mysql/mysqltuner-report.txt"
+
+for i in {1..120}; do
+  [ -S "$SOCKET" ] && break
+  sleep 1
 done
 
 mysqltuner --socket "$SOCKET" \
-  --user="${MYSQL_USER:-root}" \
-  --pass="${MYSQL_PASSWORD:-$MYSQL_ROOT_PASSWORD}" \
-  > /var/lib/mysql/mysqltuner-report.txt 2>&1 || true
+  --user="root" --pass="${MYSQL_ROOT_PASSWORD}" \
+  > "$REPORT" 2>&1 || true
 
-echo "mysqltuner report saved to /var/lib/mysql/mysqltuner-report.txt"
+echo "mysqltuner report saved to $REPORT"
