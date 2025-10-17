@@ -1,24 +1,31 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 echo "Running mysqltuner for initial diagnostic..."
+
+SOCKET="/run/mysqld/mysqld.sock"
+REPORT="/var/lib/mysql/mysqltuner-report.txt"
 
 ADMIN_BIN="$(command -v mariadb-admin || true)"
 [ -z "$ADMIN_BIN" ] && ADMIN_BIN="$(command -v mysqladmin || true)"
 
-if [ -n "$ADMIN_BIN" ]; then
-  until "$ADMIN_BIN" ping -h 127.0.0.1 --silent; do
-    sleep 2
-  done
-else
-  until [ -S /var/run/mysqld/mysqld.sock ]; do
-    sleep 2
-  done
-fi
+for i in {1..90}; do
+  if [ -S "$SOCKET" ]; then
+    break
+  fi
+  if [ -n "$ADMIN_BIN" ]; then
+    if "$ADMIN_BIN" --socket="$SOCKET" ping --silent >/dev/null 2>&1; then
+      break
+    fi
+  fi
+  sleep 2
+done
 
-mysqltuner --socket /var/run/mysqld/mysqld.sock \
+nohup mysqltuner \
+  --socket "$SOCKET" \
   --user="${MARIADB_USER:-root}" \
-  --pass="${MARIADB_PASSWORD:-$MARIADB_ROOT_PASSWORD}" \
-  > /var/lib/mysql/mysqltuner-report.txt 2>&1 || true
+  --pass="${MARIADB_PASSWORD:-${MARIADB_ROOT_PASSWORD:-}}" \
+  --silent \
+  > "$REPORT" 2>&1 &
 
-echo "mysqltuner report saved to /var/lib/mysql/mysqltuner-report.txt"
+echo "mysqltuner started in background; report will be at $REPORT"
