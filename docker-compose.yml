@@ -1,7 +1,7 @@
 services:
 
   mysql:
-    build: ./mysql
+    image: mysql:8.0
     container_name: tonvalidators-mysql
     restart: unless-stopped
     env_file:
