@@ -7,9 +7,9 @@ datasources:
     access: proxy
     isDefault: false
     url: ${MYSQL_HOST}:${MYSQL_PORT}
-    user: ${MYSQL_USER}
+    user: ${GF_SECURITY_ADMIN_USER}
     secureJsonData:
-      password: ${MYSQL_PASSWORD}
+      password: ${GF_SECURITY_ADMIN_PASSWORD}
     jsonData:
       database: ${MYSQL_DATABASE}
       tlsAuth: false
