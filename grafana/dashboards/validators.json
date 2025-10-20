@@ -1292,7 +1292,7 @@
       "1h"
     ]
   },
-  "timezone": "UTC",
+  "timezone": "Browser",
   "title": "Validators Dashboard",
   "uid": "validators_dashboard",
   "version": 1,
