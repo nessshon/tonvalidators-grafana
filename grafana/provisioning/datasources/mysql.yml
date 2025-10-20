@@ -15,5 +15,6 @@ datasources:
       tlsAuth: false
       sslmode: disable
       timeInterval: 1m
+      timezone: "UTC"
     version: 1
     editable: true
