@@ -1290,10 +1290,9 @@
       "15m",
       "30m",
       "1h"
-    ],
-    "nowDelay": "30s"
+    ]
   },
-  "timezone": "utc",
+  "timezone": "",
   "title": "Validators Dashboard",
   "uid": "validators_dashboard",
   "version": 1,
