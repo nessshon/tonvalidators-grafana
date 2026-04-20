@@ -15,5 +15,6 @@ datasources:
       tlsAuth: false
       sslmode: disable
       timeInterval: 1m
+      timezone: Europe/Moscow
     version: 1
     editable: true
